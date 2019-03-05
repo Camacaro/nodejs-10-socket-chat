@@ -35,16 +35,27 @@ io.on('connection', (client) => {
         // ===============================================
         client.broadcast.to(data.sala).emit('listaPersona', usuarios.getPersonasPorSala(data.sala));
 
+        // ===============================================
+        // Notificar que se unio
+        // ===============================================
+        client.broadcast.to(data.sala).emit('crearMensaje', crearMensaje('Administrador', `${data.nombre} se unió el chat`) );
+
         callback( usuarios.getPersonasPorSala(data.sala) ); 
         //console.log(client.id, data.nombre, personas);
     });
 
-    client.on('crearMensaje', (data)=>{
+    client.on('crearMensaje', (data, callback)=>{
 
         let persona = usuarios.getPersona(client.id);
 
         let mensaje = crearMensaje(persona.nombre, data.mensaje);
         client.broadcast.to(persona.sala).emit('crearMensaje', mensaje);
+
+        // ==============================
+        // Luego de enviar el mensaje a todos, lo voy a regrear
+        // ==============================
+        callback( mensaje );
+
     });
 
 
@@ -55,6 +66,7 @@ io.on('connection', (client) => {
             usuario: 'Administrador',
             mensaje: `${personaBorrada.nombre} abandonó el chat`
         } );*/
+        console.log(personaBorrada);
         client.broadcast.to(personaBorrada.sala).emit('crearMensaje', crearMensaje('Administrador', `${personaBorrada.nombre} abandonó el chat`) );
 
 
