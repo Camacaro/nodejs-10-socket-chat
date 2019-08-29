@@ -66,7 +66,7 @@ io.on('connection', (client) => {
             usuario: 'Administrador',
             mensaje: `${personaBorrada.nombre} abandonó el chat`
         } );*/
-        console.log(personaBorrada);
+        //console.log(personaBorrada);
         client.broadcast.to(personaBorrada.sala).emit('crearMensaje', crearMensaje('Administrador', `${personaBorrada.nombre} abandonó el chat`) );
 
 
